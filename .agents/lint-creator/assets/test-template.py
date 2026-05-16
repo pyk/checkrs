@@ -20,8 +20,9 @@ def test_<lint_name>_violation(tmp_path: Path) -> None:
     rs.write_text("<code that triggers the lint>")
     result = runner.invoke(app, ["run", str(rs)])
     assert result.exit_code == 1
-    assert "<lint_name>" in result.output
-    assert "<message fragment>" in result.output
+    assert "error[<lint_name>]" in result.output
+    assert "1 <description>" in result.output
+    assert "help: <help text>" in result.output
 
 
 def test_<lint_name>_clean(tmp_path: Path) -> None:

@@ -58,9 +58,15 @@ Create `src/checkrs/lints/<lint_name>.py` using the template in
 - Use `ast_grep_py.Config(rule={...})` for matching rules
 - Set `line` and `column` from the matched node's `range()` when possible
 - If no precise match exists, default to `line=1, column=1`
-- The `message` should be concise and describe the violation
+- The `message` in `Violation` should be a short tag (e.g. ``"missing"``,
+  ``"deprecated"``) — not a full sentence. The full explanation lives in
+  `description` and `help`
+- The `description` must be short and read naturally with a count prefix:
+  ``"3 {description}"``. Example: ``"mod.rs files missing \`!\`\` module doc"``
 - All metadata properties (`what_it_does`, `why_restrict`, `known_issues`,
-  `example`) must be filled in
+  `example`, `help`) must be filled in
+- `help` should state the rule or fix in one short sentence. It prints once
+  per lint, after all file locations
 
 ## Step 2: Register the Lint
 
@@ -90,10 +96,24 @@ Create `tests/lints/test_<lint_name>.py` using the template in
 - Provide at minimum two tests: one that triggers the lint and one that does
   not
 - Use `tmp_path` from pytest to create temporary Rust files
-- Verify both the exit code and the output text contain the lint name and
-  message fragments
+- Verify the exit code and output contain:
+  - The lint name in the header: ``error[{lint_name}]:``
+  - The count and description: ``"1 {description}"``
+  - The file location: ``"--> {file}:{line}:{column}"``
+  - The help line: ``"help: {lint.help}"``
 - Keep test functions focused on a single behavior each
 - Follow the existing test file style for imports and docstrings
+
+### Output Format
+
+The runner prints one block per lint:
+
+```
+error[lint_name]: 3 lint description here
+  --> path/to/file.rs:1:1
+  --> path/to/other.rs:4:2
+help: short rule or fix text
+```
 
 ## Validation
 

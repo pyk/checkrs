@@ -22,8 +22,12 @@ class <ClassName>(Lint):
 
     @property
     def description(self) -> str:
-        """Return the lint description."""
-        return "<one-line summary>"
+        """Return the lint description.
+
+        Must be short and read well with a count prefix:
+        "3 <description>". Keep it under 8 words.
+        """
+        return "<short phrase that fits after a count>"
 
     @property
     def what_it_does(self) -> str:
@@ -49,6 +53,14 @@ class <ClassName>(Lint):
             "```"
         )
 
+    @property
+    def help(self) -> str:
+        """Return a short rule or fix sentence.
+
+        Printed once after all file locations.
+        """
+        return "<one sentence explaining the rule or fix>"
+
     def check(self, file_path: Path, source: str) -> list[Violation]:
         """Check a single file and return any violations."""
         root = ast_grep_py.SgRoot(source, "rust")
@@ -73,7 +85,7 @@ class <ClassName>(Lint):
         #             file_path=file_path,
         #             line=r.start.line,
         #             column=r.start.column,
-        #             message="<violation message>",
+        #             message="missing",
         #         ),
         #     )
         # return violations
