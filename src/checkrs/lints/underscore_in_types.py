@@ -60,8 +60,10 @@ class UnderscoreInTypes(Lint):
 
         config = make_config(
             rule={
-                "kind": "let_declaration",
-                "has": {"kind": "type_identifier", "regex": "^_$", "stopBy": "end"},
+                "any": [
+                    {"kind": "type_identifier", "regex": "^_$"},
+                    {"regex": "^_$", "follows": {"regex": "^<$"}},
+                ],
             },
         )
         matches = list(node.find_all(config))
