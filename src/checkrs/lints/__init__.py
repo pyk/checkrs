@@ -45,7 +45,6 @@ from checkrs.lints.panic_usage import PanicUsage
 from checkrs.lints.path_field_types import PathFieldTypes
 from checkrs.lints.path_param_types import PathParamTypes
 from checkrs.lints.prefer_filter_map import PreferFilterMap
-from checkrs.lints.prefer_module_imports import PreferModuleImports
 from checkrs.lints.pretty_assertions_prefix import PrettyAssertionsPrefix
 from checkrs.lints.scraper_element_ref_prefix import ScraperElementRefPrefix
 from checkrs.lints.self_imports import SelfImports
@@ -127,7 +126,6 @@ def get_all_lints() -> list[Lint]:
         PathFieldTypes(),
         PathParamTypes(),
         PreferFilterMap(),
-        PreferModuleImports(),
         ContinueInErrArm(),
         MatchPanicToLetElse(),
         UnnecessaryDocSections(),
