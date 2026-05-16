@@ -48,7 +48,6 @@ from checkrs.lints.path_param_types import PathParamTypes
 from checkrs.lints.prefer_filter_map import PreferFilterMap
 from checkrs.lints.prefer_module_imports import PreferModuleImports
 from checkrs.lints.pretty_assertions_prefix import PrettyAssertionsPrefix
-from checkrs.lints.redundant_one_liner_comments import RedundantOneLinerComments
 from checkrs.lints.scraper_element_ref_prefix import ScraperElementRefPrefix
 from checkrs.lints.self_imports import SelfImports
 from checkrs.lints.serde_clone_into_from_value import SerdeCloneIntoFromValue
@@ -134,7 +133,6 @@ def get_all_lints() -> list[Lint]:
         ContinueInErrArm(),
         MatchPanicToLetElse(),
         UnnecessaryDocSections(),
-        RedundantOneLinerComments(),
         IgnoredWritelnResult(),
         ToStringInsteadOfInto(),
         StdImportOrder(),
