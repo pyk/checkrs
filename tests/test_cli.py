@@ -33,6 +33,7 @@ def test_lints() -> None:
     result = runner.invoke(app, ["lints"])
     assert result.exit_code == 0
     assert "mod_rs_missing_docs" in result.output
+    assert "missing" in result.output
 
 
 def test_run_file_not_rust(tmp_path: Path) -> None:
@@ -60,6 +61,7 @@ def test_run_directory(tmp_path: Path) -> None:
     result = runner.invoke(app, ["run", str(tmp_path)])
     assert result.exit_code == 1
     assert "sub/mod.rs" in result.output
+    assert "help: module docs must be simple, not abstract, and direct" in result.output
 
 
 def test_run_multiple_files(tmp_path: Path) -> None:
@@ -93,3 +95,4 @@ def test_run_file_and_directory(tmp_path: Path) -> None:
     )
     assert result.exit_code == 1
     assert "dir/mod.rs" in result.output
+    assert "help: module docs must be simple, not abstract, and direct" in result.output

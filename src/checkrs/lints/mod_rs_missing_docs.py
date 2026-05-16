@@ -23,7 +23,7 @@ class ModRsMissingDocs(Lint):
     @property
     def description(self) -> str:
         """Return the lint description."""
-        return "Checks that mod.rs files have module-level documentation."
+        return "mod.rs files missing `//!` module doc"
 
     @property
     def what_it_does(self) -> str:
@@ -55,6 +55,11 @@ class ModRsMissingDocs(Lint):
             "```"
         )
 
+    @property
+    def help(self) -> str:
+        """Return help text."""
+        return "module docs must be simple, not abstract, and direct"
+
     def check(self, file_path: Path, source: str) -> list[Violation]:
         """Check whether the file has module-level documentation."""
         if file_path.name != "mod.rs":
@@ -83,6 +88,6 @@ class ModRsMissingDocs(Lint):
                 file_path=file_path,
                 line=1,
                 column=1,
-                message="mod.rs is missing a module-level doc comment (``//!``)",
+                message="missing",
             ),
         ]

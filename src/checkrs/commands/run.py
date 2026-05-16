@@ -75,10 +75,13 @@ def run(paths: list[Path]) -> int:
 
     for lint_name, violations in grouped.items():
         lint = lint_map[lint_name]
-        sys.stdout.write(f"error[{lint_name}]: {lint.description}\n")
+        count = len(violations)
+        sys.stdout.write(
+            f"error[{lint_name}]: {count} {lint.description}\n",
+        )
         for v in violations:
             sys.stdout.write(f"  --> {v.file_path}:{v.line}:{v.column}\n")
-            sys.stdout.write(f"      {v.message}\n")
+        sys.stdout.write(f"help: {lint.help}\n")
         sys.stdout.write("\n")
 
     return 1

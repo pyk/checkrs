@@ -54,6 +54,11 @@ class Lint(ABC):
     def example(self) -> str:
         """Return example code showing the violation and/or fix."""
 
+    @property
+    @abstractmethod
+    def help(self) -> str:
+        """Return a short help message explaining the rule or fix."""
+
     @abstractmethod
     def check(self, file_path: Path, source: str) -> list[Violation]:
         """Check a single file and return any violations."""

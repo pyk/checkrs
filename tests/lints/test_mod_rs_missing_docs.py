@@ -21,7 +21,8 @@ def test_run_mod_rs_missing_docs(tmp_path: Path) -> None:
     result = runner.invoke(app, ["run", str(mod_rs)])
     assert result.exit_code == 1
     assert "mod_rs_missing_docs" in result.output
-    assert "missing a module-level doc comment" in result.output
+    assert "1 mod.rs files missing" in result.output
+    assert "help: module docs must be simple, not abstract, and direct" in result.output
 
 
 def test_run_mod_rs_with_docs(tmp_path: Path) -> None:
