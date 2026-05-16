@@ -7,7 +7,23 @@ authors = [
     { name = "pyk", email = "2213646+pyk@users.noreply.github.com" }
 ]
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    # AST Grep
+    "ast-grep-py>=0.42.2",
+    # CLI
+    "typer>=0.24.1",
+]
+
+[dependency-groups]
+dev = [
+    # Type Checker
+    "pyrefly>=0.60.2",
+    # Test Runner
+    "pytest>=9.0.3",
+    "pytest-asyncio>=1.3.0",
+    # Formatter and Linter
+    "ruff>=0.15.10"
+]
 
 [project.scripts]
 checkrs = "checkrs:main"
@@ -15,3 +31,47 @@ checkrs = "checkrs:main"
 [build-system]
 requires = ["uv_build>=0.11.0,<0.12.0"]
 build-backend = "uv_build"
+
+# ruff - settings
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    # D212 and D213 are incompatible; we use D212 (summary on first line)
+    "D213",
+    # D203 and D211 are incompatible; we use D211 (no blank line before class)
+    "D203",
+    # Trailing comma rule conflict with formatter
+    "COM812",
+]
+exclude = ["external/**"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    # Allow usage of assert statement in test files
+    "S101",
+    # Allow magic numbers in tests
+    "PLR2004"
+]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"typing.cast".msg = "Use type hinting or proper structural typing instead of cast()."
+"typing.Any".msg = "Use proper typing instead of Any."
+
+# pyrefly - settings
+[tool.pyrefly]
+python-platform = "linux"
+python-version = "3.14"
+python-interpreter-path = ".venv/bin/python"
+project-includes = ["src/**", "tests/**"]
+project-excludes = ["external/**"]
+# Allow imports from both src and tests
+search-path = ["src", "."]
+
+# pytest - settings
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
+norecursedirs = [
+    "external"
+]
