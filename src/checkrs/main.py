@@ -8,7 +8,7 @@ from importlib.metadata import version
 
 import typer
 
-from checkrs.commands.rules import list_lints
+from checkrs.commands.lints import list_lints
 from checkrs.commands.run import run as run_command
 
 app = typer.Typer(name="checkrs", no_args_is_help=True)
