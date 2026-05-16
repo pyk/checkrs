@@ -63,6 +63,7 @@ from checkrs.lints.tracing_info_prefix import TracingInfoPrefix
 from checkrs.lints.turbofish_collect import TurbofishCollect
 from checkrs.lints.underscore_in_types import UnderscoreInTypes
 from checkrs.lints.unnecessary_doc_sections import UnnecessaryDocSections
+from checkrs.lints.unsafe_usage import UnsafeUsage
 from checkrs.lints.unwrap_usage import UnwrapUsage
 from checkrs.lints.use_after_mod import UseAfterMod
 from checkrs.lints.use_inside_blocks import UseInsideBlocks
@@ -116,6 +117,7 @@ def get_all_lints() -> list[Lint]:
         TestPrefixInNames(),
         TurbofishCollect(),
         UnderscoreInTypes(),
+        UnsafeUsage(),
         UnwrapUsage(),
         UseAfterMod(),
         UseInsideBlocks(),
