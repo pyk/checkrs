@@ -31,7 +31,6 @@ from checkrs.lints.immediately_invoked_closures import ImmediatelyInvokedClosure
 from checkrs.lints.inconsistent_example_headers import InconsistentExampleHeaders
 from checkrs.lints.intermediate_clones import IntermediateClones
 from checkrs.lints.is_some_and_deep_match import IsSomeAndDeepMatch
-from checkrs.lints.let_chains_in_if_let import LetChainsInIfLet
 from checkrs.lints.long_if_let_blocks import LongIfLetBlocks
 from checkrs.lints.match_panic_to_let_else import MatchPanicToLetElse
 from checkrs.lints.missing_file_module_docs import MissingFileModuleDocs
@@ -101,7 +100,6 @@ def get_all_lints() -> list[Lint]:
         InconsistentExampleHeaders(),
         IntermediateClones(),
         IsSomeAndDeepMatch(),
-        LetChainsInIfLet(),
         MustUseAttribute(),
         NegatedContainsInConditions(),
         NestedIfLet(),
