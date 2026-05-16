@@ -96,3 +96,39 @@ def test_run_file_and_directory(tmp_path: Path) -> None:
     assert result.exit_code == 1
     assert "dir/mod.rs" in result.output
     assert "help: module docs must be simple, not abstract, and direct" in result.output
+
+
+def test_run_suppression_same_line(tmp_path: Path) -> None:
+    """Test same-line suppression comment."""
+    rs = tmp_path / "main.rs"
+    rs.write_text(
+        "unsafe { std::ptr::write_bytes(map_ptr, 0, crate::inspector::MAP_SIZE) };"
+        " // checkrs: allow(unsafe_usage)\n"
+    )
+    result = runner.invoke(app, ["run", str(rs)])
+    assert result.exit_code == 0
+    assert "note[unsafe_usage]: 1 unsafe usage ignored" in result.output
+
+
+def test_run_suppression_previous_line(tmp_path: Path) -> None:
+    """Test previous-line suppression comment."""
+    rs = tmp_path / "main.rs"
+    rs.write_text(
+        "// checkrs: allow(unsafe_usage)\n"
+        "unsafe { std::ptr::write_bytes(map_ptr, 0, crate::inspector::MAP_SIZE) };\n"
+    )
+    result = runner.invoke(app, ["run", str(rs)])
+    assert result.exit_code == 0
+    assert "note[unsafe_usage]: 1 unsafe usage ignored" in result.output
+
+
+def test_run_suppression_ignore_all(tmp_path: Path) -> None:
+    """Test ignore suppression comment."""
+    rs = tmp_path / "main.rs"
+    rs.write_text(
+        "unsafe { std::ptr::write_bytes(map_ptr, 0, crate::inspector::MAP_SIZE) };"
+        " // checkrs: ignore\n"
+    )
+    result = runner.invoke(app, ["run", str(rs)])
+    assert result.exit_code == 0
+    assert "note[unsafe_usage]: 1 unsafe usage ignored" in result.output
