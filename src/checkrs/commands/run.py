@@ -40,11 +40,21 @@ def _check_file(file_path: Path) -> list[Violation]:
     return violations
 
 
-def run(path: Path) -> int:
-    """Run all lints against the given path and return an exit code."""
-    files, error = _collect_files(path)
-    if error is not None:
-        sys.stderr.write(f"error: {error}: {path}\n")
+def run(paths: list[Path]) -> int:
+    """Run all lints against the given paths and return an exit code."""
+    files: list[Path] = []
+    errors: list[str] = []
+
+    for path in paths:
+        collected, error = _collect_files(path)
+        if error is not None:
+            errors.append(f"error: {error}: {path}")
+        else:
+            files.extend(collected)
+
+    if errors:
+        for msg in errors:
+            sys.stderr.write(msg + "\n")
         return 1
 
     all_violations: list[Violation] = []

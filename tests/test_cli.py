@@ -60,3 +60,36 @@ def test_run_directory(tmp_path: Path) -> None:
     result = runner.invoke(app, ["run", str(tmp_path)])
     assert result.exit_code == 1
     assert "sub/mod.rs" in result.output
+
+
+def test_run_multiple_files(tmp_path: Path) -> None:
+    """Test run accepts multiple Rust files."""
+    a = tmp_path / "a.rs"
+    b = tmp_path / "b.rs"
+    a.write_text("fn main() {}")
+    b.write_text("fn foo() {}")
+    result = runner.invoke(app, ["run", str(a), str(b)])
+    assert result.exit_code == 0
+
+
+def test_run_multiple_directories(tmp_path: Path) -> None:
+    """Test run accepts multiple directories."""
+    (tmp_path / "dir1").mkdir()
+    (tmp_path / "dir2").mkdir()
+    (tmp_path / "dir1" / "a.rs").write_text("fn main() {}")
+    (tmp_path / "dir2" / "b.rs").write_text("fn foo() {}")
+    result = runner.invoke(app, ["run", str(tmp_path / "dir1"), str(tmp_path / "dir2")])
+    assert result.exit_code == 0
+
+
+def test_run_file_and_directory(tmp_path: Path) -> None:
+    """Test run accepts a mix of files and directories."""
+    (tmp_path / "dir").mkdir()
+    (tmp_path / "dir" / "mod.rs").write_text("fn foo() {}")
+    (tmp_path / "main.rs").write_text("fn main() {}")
+    result = runner.invoke(
+        app,
+        ["run", str(tmp_path / "main.rs"), str(tmp_path / "dir")],
+    )
+    assert result.exit_code == 1
+    assert "dir/mod.rs" in result.output

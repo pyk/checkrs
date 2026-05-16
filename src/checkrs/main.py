@@ -47,11 +47,11 @@ def main(
 
 @app.command()
 def run(
-    path: pathlib.Path = _PATH_ARG,
+    paths: list[pathlib.Path] = _PATH_ARG,
 ) -> None:
     """Run the linter."""
-    p = pathlib.Path(path)
-    exit_code = run_command(p)
+    parsed = [pathlib.Path(p) for p in paths]
+    exit_code = run_command(parsed)
     raise typer.Exit(exit_code)
 
 
