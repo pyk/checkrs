@@ -43,7 +43,7 @@ ignore = [
     # Trailing comma rule conflict with formatter
     "COM812",
 ]
-exclude = ["external/**"]
+exclude = ["external/**", ".agents/**"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = [
@@ -63,7 +63,7 @@ python-platform = "linux"
 python-version = "3.14"
 python-interpreter-path = ".venv/bin/python"
 project-includes = ["src/**", "tests/**"]
-project-excludes = ["external/**"]
+project-excludes = ["external/**", ".agents/**"]
 # Allow imports from both src and tests
 search-path = ["src", "."]
 

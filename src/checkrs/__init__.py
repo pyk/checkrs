@@ -1,2 +1,6 @@
-def main() -> None:
-    print("Hello from checkrs!")
+"""checkrs - A Rust linter."""
+
+from checkrs.main import app
+
+main = app
+
