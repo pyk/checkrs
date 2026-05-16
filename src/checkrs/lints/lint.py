@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+import ast
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
+
+import ast_grep_py
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -19,6 +22,12 @@ class Violation:
     line: int
     column: int
     message: str
+
+
+def make_config(**kwargs: object) -> ast_grep_py.Config:
+    """Create an ast-grep config from keyword arguments."""
+    d = ast.literal_eval(repr(kwargs))
+    return ast_grep_py.Config(**d)
 
 
 class Lint(ABC):

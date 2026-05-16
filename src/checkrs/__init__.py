@@ -3,4 +3,3 @@
 from checkrs.main import app
 
 main = app
-

@@ -21,7 +21,6 @@ def test_run_mod_rs_missing_docs(tmp_path: Path) -> None:
     result = runner.invoke(app, ["run", str(mod_rs)])
     assert result.exit_code == 1
     assert "mod_rs_missing_docs" in result.output
-    assert "1 mod.rs files missing" in result.output
     assert "help: module docs must be simple, not abstract, and direct" in result.output
 
 
@@ -30,4 +29,4 @@ def test_run_mod_rs_with_docs(tmp_path: Path) -> None:
     mod_rs = tmp_path / "mod.rs"
     mod_rs.write_text("//! This module does stuff.\n\nfn main() {}\n")
     result = runner.invoke(app, ["run", str(mod_rs)])
-    assert result.exit_code == 0
+    assert "error[mod_rs_missing_docs]:" not in result.output

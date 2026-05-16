@@ -1,0 +1,82 @@
+"""Lint: pretty_assertions::assert_eq! with prefix."""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+import ast_grep_py
+
+from checkrs.lints.lint import Lint, Violation, make_config
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+
+class PrettyAssertionsPrefix(Lint):
+    """pretty_assertions::assert_eq! with prefix."""
+
+    @property
+    def name(self) -> str:
+        """Return the lint name."""
+        return "pretty_assertions_prefix"
+
+    @property
+    def description(self) -> str:
+        """Return the lint description."""
+        return "pretty_assertions::assert_eq! with prefix"
+
+    @property
+    def what_it_does(self) -> str:
+        """Return what the lint does."""
+        return (
+            "Import the `assert_eq!` macro once at the top of the file and use it"
+            "without the `pretty_assertions::` prefix for cleaner, more idiomatic"
+            "code."
+        )
+
+    @property
+    def why_restrict(self) -> str:
+        """Return why this pattern is restricted."""
+        return "**Incorrect:** ```rust pretty_assertions::assert_eq!(actual,expected);"
+
+    @property
+    def known_issues(self) -> str:
+        """Return known issues."""
+        return "None."
+
+    @property
+    def example(self) -> str:
+        """Return example code."""
+        return (
+            "```rust\n"
+            "pretty_assertions::assert_eq!(actual, expected);\n"
+            "\n"
+            'pretty_assertions::assert_eq!(actual, expected, "values should match");\n'
+            "```"
+        )
+
+    @property
+    def help(self) -> str:
+        """Return help text."""
+        return "import assert_eq! and use it without the prefix"
+
+    def check(self, file_path: Path, source: str) -> list[Violation]:
+        """Check a file and return any violations."""
+        root = ast_grep_py.SgRoot(source, "rust")
+        node = root.root()
+
+        config = make_config(
+            rule={"pattern": "pretty_assertions::assert_eq!($$$ARGS)"},
+        )
+        matches = list(node.find_all(config))
+
+        return [
+            Violation(
+                lint_name=self.name,
+                file_path=file_path,
+                line=m.range().start.line + 1,
+                column=m.range().start.column + 1,
+                message="found",
+            )
+            for m in matches
+        ]

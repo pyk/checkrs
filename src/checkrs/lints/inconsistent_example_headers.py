@@ -1,4 +1,4 @@
-"""Lint: mod.rs files must have module-level documentation."""
+"""Lint: inconsistent example headers."""
 
 from __future__ import annotations
 
@@ -12,33 +12,35 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-class ModRsMissingDocs(Lint):
-    """Checks that mod.rs files contain a module doc comment."""
+class InconsistentExampleHeaders(Lint):
+    """inconsistent example headers."""
 
     @property
     def name(self) -> str:
         """Return the lint name."""
-        return "mod_rs_missing_docs"
+        return "inconsistent_example_headers"
 
     @property
     def description(self) -> str:
         """Return the lint description."""
-        return "mod.rs files missing `//!` module doc"
+        return "inconsistent example headers"
 
     @property
     def what_it_does(self) -> str:
         """Return what the lint does."""
         return (
-            "Checks whether `mod.rs` files start with a module doc comment (``//!``)."
+            "Use '# Example' as the standard header for code examples in"
+            "documentation. This provides a consistent naming convention across"
+            "all doc comments."
         )
 
     @property
     def why_restrict(self) -> str:
         """Return why this pattern is restricted."""
         return (
-            "Module documentation helps readers understand the purpose of a module "
-            "immediately. A `mod.rs` without docs forces developers to read the code "
-            "to infer intent. The style should be simple, not abstract, and direct."
+            "Use '# Example' as the standard header for code examples in"
+            "documentation. This provides a consistent naming convention across"
+            "all doc comments."
         )
 
     @property
@@ -49,41 +51,35 @@ class ModRsMissingDocs(Lint):
     @property
     def example(self) -> str:
         """Return example code."""
-        return "```rust\n//! This module handles user authentication.\n```"
+        return "```rust\n// No example provided\n```"
 
     @property
     def help(self) -> str:
         """Return help text."""
-        return "module docs must be simple, not abstract, and direct"
+        return "use '# Example' consistently"
 
     def check(self, file_path: Path, source: str) -> list[Violation]:
-        """Check whether the file has module-level documentation."""
-        if file_path.name != "mod.rs":
-            return []
-
+        """Check a file and return any violations."""
         root = ast_grep_py.SgRoot(source, "rust")
         node = root.root()
 
         config = make_config(
             rule={
-                "kind": "source_file",
-                "has": {
-                    "kind": "line_comment",
-                    "regex": r"^//!\s*\S",
-                },
+                "all": [
+                    {"kind": "line_comment"},
+                    {"regex": "///\\s*#\\s*Example Usage"},
+                ]
             },
         )
         matches = list(node.find_all(config))
-
-        if matches:
-            return []
 
         return [
             Violation(
                 lint_name=self.name,
                 file_path=file_path,
-                line=1,
-                column=1,
-                message="missing",
-            ),
+                line=m.range().start.line + 1,
+                column=m.range().start.column + 1,
+                message="found",
+            )
+            for m in matches
         ]

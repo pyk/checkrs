@@ -1,4 +1,4 @@
-"""Lint: mod.rs files must have module-level documentation."""
+"""Lint: immediately-invoked closures."""
 
 from __future__ import annotations
 
@@ -12,34 +12,35 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
-class ModRsMissingDocs(Lint):
-    """Checks that mod.rs files contain a module doc comment."""
+class ImmediatelyInvokedClosures(Lint):
+    """immediately-invoked closures."""
 
     @property
     def name(self) -> str:
         """Return the lint name."""
-        return "mod_rs_missing_docs"
+        return "immediately_invoked_closures"
 
     @property
     def description(self) -> str:
         """Return the lint description."""
-        return "mod.rs files missing `//!` module doc"
+        return (
+            "using immediately-invoked closures like (|| { ... })(). Define a"
+            "dedicated function instead"
+        )
 
     @property
     def what_it_does(self) -> str:
         """Return what the lint does."""
         return (
-            "Checks whether `mod.rs` files start with a module doc comment (``//!``)."
+            "Immediately-invoked closures like (|| { ... })() are cryptic and"
+            "make the code harder to read. Instead, define a named function or a"
+            "local function with the `fn` keyword."
         )
 
     @property
     def why_restrict(self) -> str:
         """Return why this pattern is restricted."""
-        return (
-            "Module documentation helps readers understand the purpose of a module "
-            "immediately. A `mod.rs` without docs forces developers to read the code "
-            "to infer intent. The style should be simple, not abstract, and direct."
-        )
+        return "Bad: ```rust let result = (|| { Ok(()) })(); ```"
 
     @property
     def known_issues(self) -> str:
@@ -49,41 +50,37 @@ class ModRsMissingDocs(Lint):
     @property
     def example(self) -> str:
         """Return example code."""
-        return "```rust\n//! This module handles user authentication.\n```"
+        return "```rust\nlet result = (|| {\n    Ok(())\n})();\n```"
 
     @property
     def help(self) -> str:
         """Return help text."""
-        return "module docs must be simple, not abstract, and direct"
+        return "define a named function instead of immediately-invoked closures"
 
     def check(self, file_path: Path, source: str) -> list[Violation]:
-        """Check whether the file has module-level documentation."""
-        if file_path.name != "mod.rs":
-            return []
-
+        """Check a file and return any violations."""
         root = ast_grep_py.SgRoot(source, "rust")
         node = root.root()
 
         config = make_config(
             rule={
-                "kind": "source_file",
-                "has": {
-                    "kind": "line_comment",
-                    "regex": r"^//!\s*\S",
-                },
+                "any": [
+                    {"pattern": "(|| { $$$STATEMENTS })()"},
+                    {"pattern": "(|| $EXPR)()"},
+                    {"pattern": "(move || { $$$STATEMENTS })()"},
+                    {"pattern": "(move || $EXPR)()"},
+                ]
             },
         )
         matches = list(node.find_all(config))
-
-        if matches:
-            return []
 
         return [
             Violation(
                 lint_name=self.name,
                 file_path=file_path,
-                line=1,
-                column=1,
-                message="missing",
-            ),
+                line=m.range().start.line + 1,
+                column=m.range().start.column + 1,
+                message="found",
+            )
+            for m in matches
         ]

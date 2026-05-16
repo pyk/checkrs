@@ -48,7 +48,7 @@ def test_run_file_not_rust(tmp_path: Path) -> None:
 def test_run_file_no_violations(tmp_path: Path) -> None:
     """Test run succeeds on a clean Rust file."""
     rs = tmp_path / "main.rs"
-    rs.write_text("fn main() {}")
+    rs.write_text("//! Clean file.\n\nfn main() {}\n")
     result = runner.invoke(app, ["run", str(rs)])
     assert result.exit_code == 0
 
@@ -68,8 +68,8 @@ def test_run_multiple_files(tmp_path: Path) -> None:
     """Test run accepts multiple Rust files."""
     a = tmp_path / "a.rs"
     b = tmp_path / "b.rs"
-    a.write_text("fn main() {}")
-    b.write_text("fn foo() {}")
+    a.write_text("//! Clean file.\n\nfn main() {}\n")
+    b.write_text("//! Clean file.\n\nfn foo() {}\n")
     result = runner.invoke(app, ["run", str(a), str(b)])
     assert result.exit_code == 0
 
@@ -78,8 +78,8 @@ def test_run_multiple_directories(tmp_path: Path) -> None:
     """Test run accepts multiple directories."""
     (tmp_path / "dir1").mkdir()
     (tmp_path / "dir2").mkdir()
-    (tmp_path / "dir1" / "a.rs").write_text("fn main() {}")
-    (tmp_path / "dir2" / "b.rs").write_text("fn foo() {}")
+    (tmp_path / "dir1" / "a.rs").write_text("//! Clean file.\n\nfn main() {}\n")
+    (tmp_path / "dir2" / "b.rs").write_text("//! Clean file.\n\nfn foo() {}\n")
     result = runner.invoke(app, ["run", str(tmp_path / "dir1"), str(tmp_path / "dir2")])
     assert result.exit_code == 0
 
