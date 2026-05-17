@@ -39,7 +39,6 @@ from checkrs.lints.must_use_attribute import MustUseAttribute
 from checkrs.lints.negated_contains_in_conditions import NegatedContainsInConditions
 from checkrs.lints.nested_if_let import NestedIfLet
 from checkrs.lints.non_test_module_declarations import NonTestModuleDeclarations
-from checkrs.lints.ok_method_calls import OkMethodCalls
 from checkrs.lints.owned_string_parameters import OwnedStringParameters
 from checkrs.lints.panic_usage import PanicUsage
 from checkrs.lints.path_field_types import PathFieldTypes
@@ -104,7 +103,6 @@ def get_all_lints() -> list[Lint]:
         NegatedContainsInConditions(),
         NestedIfLet(),
         NonTestModuleDeclarations(),
-        OkMethodCalls(),
         PanicUsage(),
         SelfImports(),
         StdHashmapPrefix(),
