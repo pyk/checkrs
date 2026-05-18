@@ -50,6 +50,7 @@ from checkrs.lints.scraper_element_ref_prefix import ScraperElementRefPrefix
 from checkrs.lints.self_imports import SelfImports
 from checkrs.lints.serde_clone_into_from_value import SerdeCloneIntoFromValue
 from checkrs.lints.serde_enum_tag import SerdeEnumTag
+from checkrs.lints.std_exitcode_prefix import StdExitcodePrefix
 from checkrs.lints.std_fs_prefix import StdFsPrefix
 from checkrs.lints.std_hashmap_prefix import StdHashmapPrefix
 from checkrs.lints.std_hashset_prefix import StdHashsetPrefix
@@ -111,6 +112,7 @@ def get_all_lints() -> list[Lint]:
         StdHashsetPrefix(),
         StdFsPrefix(),
         StdPathPrefix(),
+        StdExitcodePrefix(),
         StdProcessPrefix(),
         OwnedStringParameters(),
         SuperImports(),
