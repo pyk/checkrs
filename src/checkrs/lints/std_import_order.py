@@ -57,7 +57,10 @@ class StdImportOrder(Lint):
     @property
     def help(self) -> str:
         """Return help text."""
-        return "place std imports before external and crate imports"
+        return (
+            "place std imports before external and crate imports,"
+            " and add a blank line between std and external imports"
+        )
 
     def check(self, file_path: Path, source: str) -> list[Violation]:
         """Check a file and return any violations."""

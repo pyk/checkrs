@@ -24,7 +24,11 @@ def test_run_std_import_order(tmp_path: Path) -> None:
     result = runner.invoke(app, ["run", str(rust_file)])
     assert result.exit_code == 1
     assert "std_import_order" in result.output
-    assert "help: place std imports before external and crate imports" in result.output
+    assert (
+        "help: place std imports before external and crate imports,"
+        " and add a blank line between std and external imports"
+        in result.output
+    )
 
 
 def test_run_std_import_order_clean(tmp_path: Path) -> None:
