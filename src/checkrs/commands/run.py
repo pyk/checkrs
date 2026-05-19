@@ -6,8 +6,10 @@ import os
 import re
 import sys
 from collections import defaultdict
-from concurrent.futures import ThreadPoolExecutor
+from multiprocessing import get_context
 from typing import TYPE_CHECKING
+
+import ast_grep_py
 
 from checkrs.lints import get_all_lints
 
@@ -69,9 +71,11 @@ def _check_file(
         return active, suppressed
 
     suppressions = _parse_suppressions(source)
+    root = ast_grep_py.SgRoot(source, "rust")
+    node = root.root()
 
     for lint in get_all_lints():
-        for violation in lint.check(file_path, source):
+        for violation in lint.check(file_path, node):
             if (violation.line, violation.lint_name) in suppressions:
                 suppressed.append(violation)
                 continue
@@ -132,9 +136,15 @@ def run(paths: list[Path]) -> int:
 
     all_violations: list[Violation] = []
     all_suppressed: list[Violation] = []
-    max_workers = min(32, (os.cpu_count() or 1) + 4)
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        results = executor.map(_check_file, files)
+
+    if sys.platform == "linux":
+        ctx = get_context("fork")
+        max_workers = min(8, (os.cpu_count() or 1))
+        chunksize = max(1, len(files) // max_workers)
+        with ctx.Pool(processes=max_workers) as pool:
+            results = pool.map(_check_file, files, chunksize=chunksize)
+    else:
+        results = [_check_file(f) for f in files]
 
     for active_list, suppressed_list in results:
         all_violations.extend(active_list)

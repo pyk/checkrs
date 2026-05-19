@@ -2,15 +2,16 @@
 
 from __future__ import annotations
 
-import ast
+import json
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from functools import lru_cache
 from typing import TYPE_CHECKING
-
-import ast_grep_py
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+    import ast_grep_py
 
 
 @dataclass(frozen=True)
@@ -24,10 +25,14 @@ class Violation:
     message: str
 
 
+@lru_cache(maxsize=256)
+def _cached_config(key: str) -> ast_grep_py.Config:
+    return json.loads(key)
+
+
 def make_config(**kwargs: object) -> ast_grep_py.Config:
     """Create an ast-grep config from keyword arguments."""
-    d = ast.literal_eval(repr(kwargs))
-    return ast_grep_py.Config(**d)
+    return _cached_config(json.dumps(kwargs, sort_keys=True))
 
 
 class Lint(ABC):
@@ -69,5 +74,5 @@ class Lint(ABC):
         """Return a short help message explaining the rule or fix."""
 
     @abstractmethod
-    def check(self, file_path: Path, source: str) -> list[Violation]:
+    def check(self, file_path: Path, node: ast_grep_py.SgNode) -> list[Violation]:
         """Check a single file and return any violations."""

@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import ast_grep_py
-
 from checkrs.lints.lint import Lint, Violation, make_config
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+    import ast_grep_py
 
 
 class ModRsMissingDocs(Lint):
@@ -56,13 +56,11 @@ class ModRsMissingDocs(Lint):
         """Return help text."""
         return "module docs must be simple, not abstract, and direct"
 
-    def check(self, file_path: Path, source: str) -> list[Violation]:
+    def check(self, file_path: Path, node: ast_grep_py.SgNode) -> list[Violation]:
         """Check whether the file has module-level documentation."""
         if file_path.name != "mod.rs":
             return []
 
-        root = ast_grep_py.SgRoot(source, "rust")
-        node = root.root()
 
         config = make_config(
             rule={

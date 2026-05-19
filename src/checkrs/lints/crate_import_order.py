@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import ast_grep_py
-
 from checkrs.lints.lint import Lint, Violation, make_config
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+    import ast_grep_py
 
 
 class CrateImportOrder(Lint):
@@ -60,11 +60,8 @@ class CrateImportOrder(Lint):
         """Return help text."""
         return "place crate imports after external imports"
 
-    def check(self, file_path: Path, source: str) -> list[Violation]:
+    def check(self, file_path: Path, node: ast_grep_py.SgNode) -> list[Violation]:
         """Check a file and return any violations."""
-        root = ast_grep_py.SgRoot(source, "rust")
-        node = root.root()
-
         config = make_config(
             rule={
                 "kind": "use_declaration",
