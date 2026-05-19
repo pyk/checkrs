@@ -6,6 +6,10 @@ My personal rust linter powered by ast-grep.
 
 TODO
 
+## Blog Post
+
+- [Making checkrs 17x faster](https://pyk.sh/blog/2026-05-19-make-checkrs-faster)
+
 ## Development
 
 Clone the repo:
