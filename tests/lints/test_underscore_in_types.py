@@ -47,6 +47,24 @@ def test_run_underscore_in_types_pattern_not_flagged(tmp_path: Path) -> None:
     assert "error[underscore_in_types]:" not in result.output
 
 
+def test_run_underscore_in_types_turbofish_chain(tmp_path: Path) -> None:
+    """Test run detects underscore_in_types in turbofish collect chain."""
+    rust_file = tmp_path / "main.rs"
+    rust_file.write_text(
+        """let target_list = targets
+    .iter()
+    .enumerate()
+    .map(|(i, s)| format!("         {}. {s}", i + 1))
+    .collect::<Vec<_>>()
+    .join("\\n");
+"""
+    )
+    result = runner.invoke(app, ["run", str(rust_file)])
+    assert result.exit_code == 1
+    assert "underscore_in_types" in result.output
+    assert "help: specify the actual type instead of underscore" in result.output
+
+
 def test_run_underscore_in_types_clean(tmp_path: Path) -> None:
     """Test run passes when no underscore_in_types violations."""
     rust_file = tmp_path / "main.rs"

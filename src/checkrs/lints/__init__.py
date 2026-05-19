@@ -16,6 +16,7 @@ from checkrs.lints.anyhow_map_err import AnyhowMapErr
 from checkrs.lints.anyhow_match_option_context import AnyhowMatchOptionContext
 from checkrs.lints.anyhow_ok_or_else import AnyhowOkOrElse
 from checkrs.lints.anyhow_prefer_context import AnyhowPreferContext
+from checkrs.lints.anyhow_result_prefix import AnyhowResultPrefix
 from checkrs.lints.as_limbs_truncation import AsLimbsTruncation
 from checkrs.lints.block_doc_comments import BlockDocComments
 from checkrs.lints.box_leak_usage import BoxLeakUsage
@@ -87,6 +88,7 @@ def get_all_lints() -> list[Lint]:
         AnyhowPreferContext(),
         AnyhowMatchOptionContext(),
         AnyhowEnsureUsage(),
+        AnyhowResultPrefix(),
         PrettyAssertionsPrefix(),
         MissingFileModuleDocs(),
         AllowDeadCode(),
