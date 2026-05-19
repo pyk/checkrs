@@ -19,7 +19,7 @@ def test_run_revm_database_cachedb_prefix(tmp_path: Path) -> None:
     rust_file = tmp_path / "main.rs"
     rust_file.write_text(
         "pub fn create_db() -> revm::database::CacheDB<InMemoryDB> {\n"
-        "    // ...\n"
+        "    revm::database::CacheDB::new(backend)\n"
         "}\n"
     )
     result = runner.invoke(app, ["run", str(rust_file)])
@@ -39,7 +39,7 @@ def test_run_revm_database_cachedb_prefix_clean(tmp_path: Path) -> None:
         "\n"
         "use revm::database::CacheDB;\n\n"
         "pub fn create_db() -> CacheDB<InMemoryDB> {\n"
-        "    // ...\n"
+        "    CacheDB::new(backend)\n"
         "}\n"
     )
     result = runner.invoke(app, ["run", str(rust_file)])

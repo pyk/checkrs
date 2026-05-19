@@ -66,9 +66,19 @@ class RevmDatabaseInmemorydbPrefix(Lint):
         """Check a file and return any violations."""
         config = make_config(
             rule={
-                "all": [
-                    {"kind": "scoped_type_identifier"},
-                    {"regex": "revm::database::InMemoryDB"},
+                "any": [
+                    {
+                        "all": [
+                            {"kind": "scoped_type_identifier"},
+                            {"regex": "revm::database::InMemoryDB"},
+                        ]
+                    },
+                    {
+                        "all": [
+                            {"kind": "call_expression"},
+                            {"regex": "revm::database::InMemoryDB::"},
+                        ]
+                    },
                 ]
             },
         )

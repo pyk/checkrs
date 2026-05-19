@@ -19,7 +19,7 @@ def test_run_revm_database_inmemorydb_prefix(tmp_path: Path) -> None:
     rust_file = tmp_path / "main.rs"
     rust_file.write_text(
         "pub fn create_db() -> revm::database::InMemoryDB {\n"
-        "    // ...\n"
+        "    revm::database::InMemoryDB::default()\n"
         "}\n"
     )
     result = runner.invoke(app, ["run", str(rust_file)])
@@ -39,7 +39,7 @@ def test_run_revm_database_inmemorydb_prefix_clean(tmp_path: Path) -> None:
         "\n"
         "use revm::database::InMemoryDB;\n\n"
         "pub fn create_db() -> InMemoryDB {\n"
-        "    // ...\n"
+        "    InMemoryDB::default()\n"
         "}\n"
     )
     result = runner.invoke(app, ["run", str(rust_file)])

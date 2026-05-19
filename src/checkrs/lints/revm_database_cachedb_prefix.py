@@ -66,9 +66,19 @@ class RevmDatabaseCachedbPrefix(Lint):
         """Check a file and return any violations."""
         config = make_config(
             rule={
-                "all": [
-                    {"kind": "scoped_type_identifier"},
-                    {"regex": "revm::database::CacheDB"},
+                "any": [
+                    {
+                        "all": [
+                            {"kind": "scoped_type_identifier"},
+                            {"regex": "revm::database::CacheDB"},
+                        ]
+                    },
+                    {
+                        "all": [
+                            {"kind": "call_expression"},
+                            {"regex": "revm::database::CacheDB::"},
+                        ]
+                    },
                 ]
             },
         )
