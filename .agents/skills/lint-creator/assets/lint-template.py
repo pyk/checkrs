@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import ast_grep_py
-
-from checkrs.lints.lint import Lint, Violation
+from checkrs.lints.lint import Lint, Violation, make_config
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+    import ast_grep_py
 
 
 class <ClassName>(Lint):
@@ -61,13 +61,10 @@ class <ClassName>(Lint):
         """
         return "<one sentence explaining the rule or fix>"
 
-    def check(self, file_path: Path, source: str) -> list[Violation]:
+    def check(self, file_path: Path, node: ast_grep_py.SgNode) -> list[Violation]:
         """Check a single file and return any violations."""
-        root = ast_grep_py.SgRoot(source, "rust")
-        node = root.root()
-
         # Example: match a specific pattern
-        # config = ast_grep_py.Config(
+        # config = make_config(
         #     rule={
         #         "kind": "<ast_kind>",
         #         "pattern": "$A",

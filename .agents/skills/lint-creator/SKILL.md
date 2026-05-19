@@ -48,14 +48,14 @@ Create `src/checkrs/lints/<lint_name>.py` using the template in
 
 ### Implementation Rules
 
-- Import `ast_grep_py` for AST-based matching on Rust source code
-- Import `Lint` and `Violation` from `checkrs.lints.lint`
+- Import `Lint`, `Violation`, and `make_config` from `checkrs.lints.lint`
+- Import `ast_grep_py` inside `TYPE_CHECKING` for type annotations
 - Use `from __future__ import annotations` and `TYPE_CHECKING` for `pathlib.Path`
-- The `check` method receives `(file_path: Path, source: str)` and returns
-  `list[Violation]`
+- The `check` method receives `(file_path: Path, node: ast_grep_py.SgNode)` and
+  returns `list[Violation]`
 - Return an empty list when the file is clean
-- Use `ast_grep_py.SgRoot(source, "rust")` to parse the file
-- Use `ast_grep_py.Config(rule={...})` for matching rules
+- Use `make_config(rule={...})` for matching rules — the runner parses the file
+  once and passes the root node to each lint
 - Set `line` and `column` from the matched node's `range()` when possible
 - If no precise match exists, default to `line=1, column=1`
 - The `message` in `Violation` should be a short tag (e.g. ``"missing"``,
