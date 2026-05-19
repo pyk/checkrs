@@ -44,3 +44,22 @@ def test_run_revm_database_cachedb_prefix_clean(tmp_path: Path) -> None:
     )
     result = runner.invoke(app, ["run", str(rust_file)])
     assert "error[revm_database_cachedb_prefix]:" not in result.output
+
+
+def test_run_revm_database_cachedb_prefix_use_statement_allowed(
+    tmp_path: Path,
+) -> None:
+    """Test that import statements are not flagged."""
+    rust_file = tmp_path / "main.rs"
+    rust_file.write_text(
+        "//! Clean test module.\n"
+        "\n"
+        "use revm::database::CacheDB;\n"
+        "use revm::database::{InMemoryDB, CacheDB};\n\n"
+        "pub fn create_db() -> CacheDB<InMemoryDB> {\n"
+        "    CacheDB::new(backend)\n"
+        "}\n"
+    )
+    result = runner.invoke(app, ["run", str(rust_file)])
+    assert result.exit_code == 0
+    assert "error[revm_database_cachedb_prefix]:" not in result.output
