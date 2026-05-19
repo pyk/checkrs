@@ -47,6 +47,8 @@ from checkrs.lints.path_field_types import PathFieldTypes
 from checkrs.lints.path_param_types import PathParamTypes
 from checkrs.lints.prefer_filter_map import PreferFilterMap
 from checkrs.lints.pretty_assertions_prefix import PrettyAssertionsPrefix
+from checkrs.lints.revm_database_cachedb_prefix import RevmDatabaseCachedbPrefix
+from checkrs.lints.revm_database_inmemorydb_prefix import RevmDatabaseInmemorydbPrefix
 from checkrs.lints.scraper_element_ref_prefix import ScraperElementRefPrefix
 from checkrs.lints.self_imports import SelfImports
 from checkrs.lints.serde_clone_into_from_value import SerdeCloneIntoFromValue
@@ -89,6 +91,8 @@ def get_all_lints() -> list[Lint]:
         AnyhowMatchOptionContext(),
         AnyhowEnsureUsage(),
         AnyhowResultPrefix(),
+        RevmDatabaseInmemorydbPrefix(),
+        RevmDatabaseCachedbPrefix(),
         PrettyAssertionsPrefix(),
         MissingFileModuleDocs(),
         AllowDeadCode(),
