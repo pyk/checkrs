@@ -20,6 +20,7 @@ from checkrs.lints.anyhow_result_prefix import AnyhowResultPrefix
 from checkrs.lints.as_limbs_truncation import AsLimbsTruncation
 from checkrs.lints.block_doc_comments import BlockDocComments
 from checkrs.lints.box_leak_usage import BoxLeakUsage
+from checkrs.lints.cfg_test_use import CfgTestUse
 from checkrs.lints.clap_subcommand_prefix import ClapSubcommandPrefix
 from checkrs.lints.clone_in_iterator import CloneInIterator
 from checkrs.lints.clone_in_loops import CloneInLoops
@@ -131,6 +132,7 @@ def get_all_lints() -> list[Lint]:
         UseInsideBlocks(),
         BlockDocComments(),
         BoxLeakUsage(),
+        CfgTestUse(),
         ClapSubcommandPrefix(),
         CrateImportOrder(),
         PathFieldTypes(),
