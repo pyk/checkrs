@@ -77,7 +77,14 @@ class OwnedStringParameters(Lint):
                     },
                 ]
             },
-            utils={"isFromStringImpl": {"pattern": "impl From<String> for $TYPE"}},
+            utils={
+                "isFromStringImpl": {
+                    "any": [
+                        {"pattern": "impl From<String> for $TYPE"},
+                        {"pattern": "impl TryFrom<String> for $TYPE"},
+                    ]
+                }
+            },
         )
         matches = list(node.find_all(config))
 
