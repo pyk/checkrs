@@ -25,7 +25,7 @@ def test_run_std_fs_prefix(tmp_path: Path) -> None:
     assert result.exit_code == 1
     assert "std_fs_prefix" in result.output
     assert (
-        "help: import std::fs items instead of using the fully qualified path"
+        "help: import `std::fs` and call functions via `fs::function_name()`"
         in result.output
     )
 
