@@ -62,6 +62,7 @@ from checkrs.lints.std_hashset_prefix import StdHashsetPrefix
 from checkrs.lints.std_import_order import StdImportOrder
 from checkrs.lints.std_path_prefix import StdPathPrefix
 from checkrs.lints.std_process_prefix import StdProcessPrefix
+from checkrs.lints.std_sync_arc_prefix import StdSyncArcPrefix
 from checkrs.lints.super_imports import SuperImports
 from checkrs.lints.test_prefix_in_names import TestPrefixInNames
 from checkrs.lints.to_string_instead_of_into import ToStringInsteadOfInto
@@ -122,6 +123,7 @@ def get_all_lints() -> list[Lint]:
         StdPathPrefix(),
         StdExitcodePrefix(),
         StdProcessPrefix(),
+        StdSyncArcPrefix(),
         OwnedStringParameters(),
         SuperImports(),
         TestPrefixInNames(),
