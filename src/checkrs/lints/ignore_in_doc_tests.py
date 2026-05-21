@@ -23,21 +23,21 @@ class IgnoreInDocTests(Lint):
     @property
     def description(self) -> str:
         """Return the lint description."""
-        return "ignore attributes in doc tests"
+        return "uses of `ignore` in doc tests"
 
     @property
     def what_it_does(self) -> str:
         """Return what the lint does."""
         return (
-            "The `ignore` attribute completely skips doc test validation, which"
-            "can hide compilation errors and typos. Use `no_run` to ensure the"
+            "The `ignore` attribute completely skips doc test validation, which "
+            "can hide compilation errors and typos. Use `no_run` to ensure the "
             "code compiles without executing it."
         )
 
     @property
     def why_restrict(self) -> str:
         """Return why this pattern is restricted."""
-        return "Replace: ```rust /// ```ignore /// let x = 1; /// ``` ```"
+        return "Replace `ignore` with `no_run` so the code is still type-checked."
 
     @property
     def known_issues(self) -> str:
@@ -47,7 +47,14 @@ class IgnoreInDocTests(Lint):
     @property
     def example(self) -> str:
         """Return example code."""
-        return "```rust\n/// ```ignore\n/// let x = 1;\n/// ```\n```"
+        return (
+            "```rust\n"
+            "//! ```rust,ignore\n"
+            "//! let config = Config::new();\n"
+            "//! config.validate()?;\n"
+            "//! ```\n"
+            "```"
+        )
 
     @property
     def help(self) -> str:
@@ -57,7 +64,7 @@ class IgnoreInDocTests(Lint):
     def check(self, file_path: Path, node: ast_grep_py.SgNode) -> list[Violation]:
         """Check a file and return any violations."""
         config = make_config(
-            rule={"kind": "line_comment", "regex": "```ignore"},
+            rule={"kind": "line_comment", "regex": r"```[\w,]*ignore\b"},
         )
         matches = list(node.find_all(config))
 
