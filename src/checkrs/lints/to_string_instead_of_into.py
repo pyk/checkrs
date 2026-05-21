@@ -67,7 +67,12 @@ class ToStringInsteadOfInto(Lint):
     def check(self, file_path: Path, node: ast_grep_py.SgNode) -> list[Violation]:
         """Check a file and return any violations."""
         config = make_config(
-            rule={"pattern": "$EXPR.to_string()"},
+            rule={
+                "all": [
+                    {"pattern": "$EXPR.to_string()"},
+                    {"not": {"inside": {"pattern": "$_.join($$$)", "stopBy": "end"}}},
+                ]
+            },
         )
         matches = list(node.find_all(config))
 
