@@ -46,6 +46,7 @@ from checkrs.lints.nested_if_let import NestedIfLet
 from checkrs.lints.non_test_module_declarations import NonTestModuleDeclarations
 from checkrs.lints.owned_string_parameters import OwnedStringParameters
 from checkrs.lints.panic_usage import PanicUsage
+from checkrs.lints.parking_lot_rwlock import ParkingLotRwlock
 from checkrs.lints.path_field_types import PathFieldTypes
 from checkrs.lints.path_param_types import PathParamTypes
 from checkrs.lints.prefer_filter_map import PreferFilterMap
@@ -122,6 +123,7 @@ def get_all_lints() -> list[Lint]:
         NestedIfLet(),
         NonTestModuleDeclarations(),
         PanicUsage(),
+        ParkingLotRwlock(),
         SelfImports(),
         StdHashmapPrefix(),
         StdHashsetPrefix(),
