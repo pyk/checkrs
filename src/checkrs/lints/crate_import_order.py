@@ -58,7 +58,10 @@ class CrateImportOrder(Lint):
     @property
     def help(self) -> str:
         """Return help text."""
-        return "place crate imports after external imports"
+        return (
+            "place crate imports after external imports,"
+            " and add a blank line between external and crate imports"
+        )
 
     def check(self, file_path: Path, node: ast_grep_py.SgNode) -> list[Violation]:
         """Check a file and return any violations."""
