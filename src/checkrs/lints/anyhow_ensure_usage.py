@@ -122,6 +122,36 @@ class AnyhowEnsureUsage(Lint):
                             },
                         ]
                     },
+                    {"pattern": "if $LEFT >= $RIGHT { bail!($$$ARGS); }"},
+                    {"pattern": "if $LEFT > $RIGHT { bail!($$$ARGS); }"},
+                    {"pattern": "if $LEFT == $RIGHT { bail!($$$ARGS); }"},
+                    {"pattern": "if $LEFT != $RIGHT { bail!($$$ARGS); }"},
+                    {"pattern": "if $LEFT <= $RIGHT { bail!($$$ARGS); }"},
+                    {"pattern": "if $LEFT < $RIGHT { bail!($$$ARGS); }"},
+                    {
+                        "pattern": "if $LEFT >= $RIGHT { return "
+                        "Err(anyhow::anyhow!($$$ARGS)); }"
+                    },
+                    {
+                        "pattern": "if $LEFT > $RIGHT { return "
+                        "Err(anyhow::anyhow!($$$ARGS)); }"
+                    },
+                    {
+                        "pattern": "if $LEFT == $RIGHT { return "
+                        "Err(anyhow::anyhow!($$$ARGS)); }"
+                    },
+                    {
+                        "pattern": "if $LEFT != $RIGHT { return "
+                        "Err(anyhow::anyhow!($$$ARGS)); }"
+                    },
+                    {
+                        "pattern": "if $LEFT <= $RIGHT { return "
+                        "Err(anyhow::anyhow!($$$ARGS)); }"
+                    },
+                    {
+                        "pattern": "if $LEFT < $RIGHT { return "
+                        "Err(anyhow::anyhow!($$$ARGS)); }"
+                    },
                 ]
             },
         )
