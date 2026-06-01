@@ -1,4 +1,4 @@
-"""Lint: ban `crate::` usage inside function bodies."""
+"""Lint: ban `crate::` usage outside of use declarations."""
 
 from __future__ import annotations
 
@@ -12,32 +12,32 @@ if TYPE_CHECKING:
     import ast_grep_py
 
 
-class CrateInFunctions(Lint):
-    """Ban `crate::` usage inside function bodies."""
+class CratePaths(Lint):
+    """Ban `crate::` usage outside of use declarations."""
 
     @property
     def name(self) -> str:
         """Return the lint name."""
-        return "crate_in_functions"
+        return "crate_paths"
 
     @property
     def description(self) -> str:
         """Return the lint description."""
-        return "crate:: paths inside function bodies"
+        return "crate:: paths outside of use declarations"
 
     @property
     def what_it_does(self) -> str:
         """Return what the lint does."""
         return (
-            "Checks for `crate::` path prefixes inside function bodies and "
-            "reports them."
+            "Checks for `crate::` path prefixes outside of use declarations "
+            "and reports them."
         )
 
     @property
     def why_restrict(self) -> str:
         """Return why this pattern is restricted."""
         return (
-            "Using `crate::` inside functions is verbose and breaks local "
+            "Using `crate::` outside of imports is verbose and breaks local "
             "consistency. Import items at the top of the module and use them "
             "directly."
         )
@@ -80,8 +80,12 @@ class CrateInFunctions(Lint):
         config = make_config(
             rule={
                 "all": [
-                    {"kind": "scoped_identifier", "regex": r"^crate::"},
-                    {"inside": {"kind": "block", "stopBy": "end"}},
+                    {
+                        "any": [
+                            {"kind": "scoped_identifier", "regex": r"^crate::"},
+                            {"kind": "scoped_type_identifier", "regex": r"^crate::"},
+                        ]
+                    },
                     {
                         "not": {
                             "inside": {
@@ -93,8 +97,16 @@ class CrateInFunctions(Lint):
                     {
                         "not": {
                             "inside": {
-                                "kind": "scoped_identifier",
-                                "regex": r"^crate::",
+                                "any": [
+                                    {
+                                        "kind": "scoped_identifier",
+                                        "regex": r"^crate::",
+                                    },
+                                    {
+                                        "kind": "scoped_type_identifier",
+                                        "regex": r"^crate::",
+                                    },
+                                ],
                                 "stopBy": "end",
                             }
                         }
