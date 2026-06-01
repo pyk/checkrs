@@ -12,32 +12,32 @@ if TYPE_CHECKING:
     import ast_grep_py
 
 
-class SuperInFunctions(Lint):
-    """Ban `super::` usage inside function bodies."""
+class SuperPaths(Lint):
+    """Ban `super::` usage outside of use declarations."""
 
     @property
     def name(self) -> str:
         """Return the lint name."""
-        return "super_in_functions"
+        return "super_paths"
 
     @property
     def description(self) -> str:
         """Return the lint description."""
-        return "super:: paths inside function bodies"
+        return "super:: paths outside of use declarations"
 
     @property
     def what_it_does(self) -> str:
         """Return what the lint does."""
         return (
-            "Checks for `super::` path prefixes inside function bodies and "
-            "reports them."
+            "Checks for `super::` path prefixes outside of use declarations "
+            "and reports them."
         )
 
     @property
     def why_restrict(self) -> str:
         """Return why this pattern is restricted."""
         return (
-            "Using `super::` inside functions is verbose and breaks local "
+            "Using `super::` outside of imports is verbose and breaks local "
             "consistency. Import items at the top of the module and use them "
             "directly."
         )
@@ -86,8 +86,12 @@ class SuperInFunctions(Lint):
         config = make_config(
             rule={
                 "all": [
-                    {"kind": "scoped_identifier", "regex": r"^super::"},
-                    {"inside": {"kind": "block", "stopBy": "end"}},
+                    {
+                        "any": [
+                            {"kind": "scoped_identifier", "regex": r"^super::"},
+                            {"kind": "scoped_type_identifier", "regex": r"^super::"},
+                        ]
+                    },
                     {
                         "not": {
                             "inside": {
@@ -99,8 +103,16 @@ class SuperInFunctions(Lint):
                     {
                         "not": {
                             "inside": {
-                                "kind": "scoped_identifier",
-                                "regex": r"^super::",
+                                "any": [
+                                    {
+                                        "kind": "scoped_identifier",
+                                        "regex": r"^super::",
+                                    },
+                                    {
+                                        "kind": "scoped_type_identifier",
+                                        "regex": r"^super::",
+                                    },
+                                ],
                                 "stopBy": "end",
                             }
                         }
