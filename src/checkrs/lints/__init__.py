@@ -69,7 +69,6 @@ from checkrs.lints.std_process_prefix import StdProcessPrefix
 from checkrs.lints.std_sync_arc_prefix import StdSyncArcPrefix
 from checkrs.lints.super_imports import SuperImports
 from checkrs.lints.test_prefix_in_names import TestPrefixInNames
-from checkrs.lints.to_string_instead_of_into import ToStringInsteadOfInto
 from checkrs.lints.tracing_info_prefix import TracingInfoPrefix
 from checkrs.lints.turbofish_collect import TurbofishCollect
 from checkrs.lints.underscore_in_types import UnderscoreInTypes
@@ -154,7 +153,6 @@ def get_all_lints() -> list[Lint]:
         MatchPanicToLetElse(),
         UnnecessaryDocSections(),
         IgnoredWritelnResult(),
-        ToStringInsteadOfInto(),
         StdImportOrder(),
         ScraperElementRefPrefix(),
         SerdeEnumTag(),
