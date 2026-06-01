@@ -54,6 +54,7 @@ from checkrs.lints.pretty_assertions_prefix import PrettyAssertionsPrefix
 from checkrs.lints.revm_bytecode_bytecode_prefix import RevmBytecodeBytecodePrefix
 from checkrs.lints.revm_database_cachedb_prefix import RevmDatabaseCachedbPrefix
 from checkrs.lints.revm_database_inmemorydb_prefix import RevmDatabaseInmemorydbPrefix
+from checkrs.lints.revm_primitives_address_prefix import RevmPrimitivesAddressPrefix
 from checkrs.lints.revm_primitives_bytes_prefix import RevmPrimitivesBytesPrefix
 from checkrs.lints.scraper_element_ref_prefix import ScraperElementRefPrefix
 from checkrs.lints.self_imports import SelfImports
@@ -100,6 +101,7 @@ def get_all_lints() -> list[Lint]:
         RevmDatabaseInmemorydbPrefix(),
         RevmDatabaseCachedbPrefix(),
         RevmBytecodeBytecodePrefix(),
+        RevmPrimitivesAddressPrefix(),
         RevmPrimitivesBytesPrefix(),
         PrettyAssertionsPrefix(),
         MissingFileModuleDocs(),
