@@ -26,6 +26,7 @@ from checkrs.lints.clone_in_iterator import CloneInIterator
 from checkrs.lints.clone_in_loops import CloneInLoops
 from checkrs.lints.continue_in_err_arm import ContinueInErrArm
 from checkrs.lints.crate_import_order import CrateImportOrder
+from checkrs.lints.crate_in_functions import CrateInFunctions
 from checkrs.lints.em_dash_in_comments import EmDashInComments
 from checkrs.lints.error_handling_in_filter_map import ErrorHandlingInFilterMap
 from checkrs.lints.expect_usage import ExpectUsage
@@ -147,6 +148,7 @@ def get_all_lints() -> list[Lint]:
         CfgTestUse(),
         ClapSubcommandPrefix(),
         CrateImportOrder(),
+        CrateInFunctions(),
         EmDashInComments(),
         PathFieldTypes(),
         PathParamTypes(),

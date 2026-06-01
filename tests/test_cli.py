@@ -102,7 +102,7 @@ def test_run_suppression_same_line(tmp_path: Path) -> None:
     """Test same-line suppression comment."""
     rs = tmp_path / "main.rs"
     rs.write_text(
-        "unsafe { std::ptr::write_bytes(map_ptr, 0, crate::inspector::MAP_SIZE) };"
+        "unsafe { std::ptr::write_bytes(map_ptr, 0, 1024) };"
         " // checkrs: allow(unsafe_usage)\n"
     )
     result = runner.invoke(app, ["run", str(rs)])
@@ -115,7 +115,7 @@ def test_run_suppression_previous_line(tmp_path: Path) -> None:
     rs = tmp_path / "main.rs"
     rs.write_text(
         "// checkrs: allow(unsafe_usage)\n"
-        "unsafe { std::ptr::write_bytes(map_ptr, 0, crate::inspector::MAP_SIZE) };\n"
+        "unsafe { std::ptr::write_bytes(map_ptr, 0, 1024) };\n"
     )
     result = runner.invoke(app, ["run", str(rs)])
     assert result.exit_code == 0
@@ -126,7 +126,7 @@ def test_run_suppression_ignore_all(tmp_path: Path) -> None:
     """Test ignore suppression comment."""
     rs = tmp_path / "main.rs"
     rs.write_text(
-        "unsafe { std::ptr::write_bytes(map_ptr, 0, crate::inspector::MAP_SIZE) };"
+        "unsafe { std::ptr::write_bytes(map_ptr, 0, 1024) };"
         " // checkrs: ignore\n"
     )
     result = runner.invoke(app, ["run", str(rs)])
