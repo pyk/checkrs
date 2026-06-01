@@ -70,6 +70,7 @@ from checkrs.lints.std_path_prefix import StdPathPrefix
 from checkrs.lints.std_process_prefix import StdProcessPrefix
 from checkrs.lints.std_sync_arc_prefix import StdSyncArcPrefix
 from checkrs.lints.super_imports import SuperImports
+from checkrs.lints.super_in_functions import SuperInFunctions
 from checkrs.lints.test_prefix_in_names import TestPrefixInNames
 from checkrs.lints.tracing_info_prefix import TracingInfoPrefix
 from checkrs.lints.turbofish_collect import TurbofishCollect
@@ -136,6 +137,7 @@ def get_all_lints() -> list[Lint]:
         StdSyncArcPrefix(),
         OwnedStringParameters(),
         SuperImports(),
+        SuperInFunctions(),
         TestPrefixInNames(),
         TurbofishCollect(),
         UnderscoreInTypes(),
