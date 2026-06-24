@@ -1,4 +1,4 @@
-"""Lint: anyhow::bail! macro with prefix."""
+"""Lint: anyhow::bail!/ensure! macro with prefix."""
 
 from __future__ import annotations
 
@@ -12,25 +12,25 @@ if TYPE_CHECKING:
     import ast_grep_py
 
 
-class AnyhowBailPrefix(Lint):
-    """anyhow::bail! macro with prefix."""
+class AnyhowPrefix(Lint):
+    """anyhow::bail!/ensure! macro with prefix."""
 
     @property
     def name(self) -> str:
         """Return the lint name."""
-        return "anyhow_bail_prefix"
+        return "anyhow_prefix"
 
     @property
     def description(self) -> str:
         """Return the lint description."""
-        return "anyhow::bail! macro with prefix"
+        return "anyhow::bail!/ensure! macro with prefix"
 
     @property
     def what_it_does(self) -> str:
         """Return what the lint does."""
         return (
-            "Import the `bail!` macro once at the top of the file and use it"
-            "without the `anyhow::` prefix for cleaner, more idiomatic code."
+            "Import the `bail!` or `ensure!` macro once at the top of the file and use"
+            " it without the `anyhow::` prefix for cleaner, more idiomatic code."
         )
 
     @property
@@ -65,12 +65,17 @@ class AnyhowBailPrefix(Lint):
     @property
     def help(self) -> str:
         """Return help text."""
-        return "import bail! and use it without the anyhow:: prefix"
+        return "import bail!/ensure! and use without the anyhow:: prefix"
 
     def check(self, file_path: Path, node: ast_grep_py.SgNode) -> list[Violation]:
         """Check a file and return any violations."""
         config = make_config(
-            rule={"pattern": "anyhow::bail!($$$ARGS)"},
+            rule={
+                "any": [
+                    {"pattern": "anyhow::bail!($$$ARGS)"},
+                    {"pattern": "anyhow::ensure!($$$ARGS)"},
+                ]
+            },
         )
         matches = list(node.find_all(config))
 

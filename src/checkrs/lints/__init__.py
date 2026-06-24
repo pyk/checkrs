@@ -7,7 +7,6 @@ from typing import TYPE_CHECKING
 from checkrs.lints.allow_dead_code import AllowDeadCode
 from checkrs.lints.allow_unused_imports import AllowUnusedImports
 from checkrs.lints.anonymous_tuple_returns import AnonymousTupleReturns
-from checkrs.lints.anyhow_bail_prefix import AnyhowBailPrefix
 from checkrs.lints.anyhow_context_format import AnyhowContextFormat
 from checkrs.lints.anyhow_ensure_usage import AnyhowEnsureUsage
 from checkrs.lints.anyhow_is_empty_bail import AnyhowIsEmptyBail
@@ -16,6 +15,7 @@ from checkrs.lints.anyhow_map_err import AnyhowMapErr
 from checkrs.lints.anyhow_match_option_context import AnyhowMatchOptionContext
 from checkrs.lints.anyhow_ok_or_else import AnyhowOkOrElse
 from checkrs.lints.anyhow_prefer_context import AnyhowPreferContext
+from checkrs.lints.anyhow_prefix import AnyhowPrefix
 from checkrs.lints.anyhow_result_prefix import AnyhowResultPrefix
 from checkrs.lints.as_limbs_truncation import AsLimbsTruncation
 from checkrs.lints.block_doc_comments import BlockDocComments
@@ -24,6 +24,7 @@ from checkrs.lints.cfg_test_use import CfgTestUse
 from checkrs.lints.clap_subcommand_prefix import ClapSubcommandPrefix
 from checkrs.lints.clone_in_iterator import CloneInIterator
 from checkrs.lints.clone_in_loops import CloneInLoops
+from checkrs.lints.comment_banner import CommentBanner
 from checkrs.lints.continue_in_err_arm import ContinueInErrArm
 from checkrs.lints.crate_import_order import CrateImportOrder
 from checkrs.lints.crate_paths import CratePaths
@@ -90,7 +91,7 @@ def get_all_lints() -> list[Lint]:
     return [
         ModRsMissingDocs(),
         AsLimbsTruncation(),
-        AnyhowBailPrefix(),
+        AnyhowPrefix(),
         AnyhowContextFormat(),
         AnyhowIsEmptyBail(),
         AnyhowIsSomeBail(),
@@ -116,6 +117,7 @@ def get_all_lints() -> list[Lint]:
         ExpectUsage(),
         ExtraSpaceAfterPeriod(),
         LongIfLetBlocks(),
+        CommentBanner(),
         IgnoreInDocTests(),
         ImmediatelyInvokedClosures(),
         InconsistentExampleHeaders(),
