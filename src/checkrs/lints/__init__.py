@@ -53,6 +53,7 @@ from checkrs.lints.path_field_types import PathFieldTypes
 from checkrs.lints.path_param_types import PathParamTypes
 from checkrs.lints.prefer_filter_map import PreferFilterMap
 from checkrs.lints.pretty_assertions_prefix import PrettyAssertionsPrefix
+from checkrs.lints.pub_crate_visibility import PubCrateVisibility
 from checkrs.lints.revm_bytecode_bytecode_prefix import RevmBytecodeBytecodePrefix
 from checkrs.lints.revm_database_cachedb_prefix import RevmDatabaseCachedbPrefix
 from checkrs.lints.revm_database_inmemorydb_prefix import RevmDatabaseInmemorydbPrefix
@@ -107,6 +108,7 @@ def get_all_lints() -> list[Lint]:
         RevmPrimitivesAddressPrefix(),
         RevmPrimitivesBytesPrefix(),
         PrettyAssertionsPrefix(),
+        PubCrateVisibility(),
         MissingFileModuleDocs(),
         AllowDeadCode(),
         AllowUnusedImports(),
