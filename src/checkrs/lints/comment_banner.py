@@ -61,7 +61,7 @@ class CommentBanner(Lint):
     @property
     def help(self) -> str:
         """Return help text."""
-        return "remove banner-style divider comments"
+        return "remove unncessary banner/section separator comments"
 
     def check(self, file_path: Path, node: ast_grep_py.SgNode) -> list[Violation]:
         """Check a file and return any violations."""
