@@ -12,6 +12,19 @@ if TYPE_CHECKING:
     import ast_grep_py
 
 
+# Only walk contiguous preceding attributes/comments for this item.
+# stopBy: end incorrectly matches attributes from earlier sibling items.
+_ATTR_STOP_BY = {
+    "not": {
+        "any": [
+            {"kind": "attribute_item"},
+            {"kind": "line_comment"},
+            {"kind": "block_comment"},
+        ]
+    }
+}
+
+
 class SerdeEnumTag(Lint):
     """enums without serde(tag) or serde(untagged)."""
 
@@ -29,8 +42,9 @@ class SerdeEnumTag(Lint):
     def what_it_does(self) -> str:
         """Return what the lint does."""
         return (
-            "Enums that derive `Deserialize` without a proper serde tagging"
-            "attribute can lead to unexpected deserialization issues."
+            "Non-unit enums that derive `Deserialize` without `serde(tag)` or"
+            " `serde(untagged)` use externally tagged representation, which can"
+            " lead to unexpected deserialization issues."
         )
 
     @property
@@ -41,7 +55,11 @@ class SerdeEnumTag(Lint):
     @property
     def known_issues(self) -> str:
         """Return known issues."""
-        return "None."
+        return (
+            "Unit-only enums (string enums) are exempt because default"
+            " externally tagged unit variants serialize as plain strings."
+            " Attributes inside `cfg_attr` are not detected."
+        )
 
     @property
     def example(self) -> str:
@@ -51,7 +69,8 @@ class SerdeEnumTag(Lint):
             "#[derive(Debug, PartialEq, Clone, Deserialize)]\n"
             '#[serde(tag = "type")]\n'
             "pub enum Model {\n"
-            "    // variants\n"
+            "    Named { name: String },\n"
+            "    Custom(String),\n"
             "}\n"
             "```"
         )
@@ -65,46 +84,84 @@ class SerdeEnumTag(Lint):
         """Check a file and return any violations."""
         config = make_config(
             rule={
-                "kind": "enum_item",
-                "follows": {
-                    "stopBy": "end",
-                    "kind": "attribute_item",
-                    "has": {
-                        "kind": "attribute",
-                        "all": [
-                            {"has": {"kind": "identifier", "regex": "^derive$"}},
-                            {"has": {"kind": "token_tree", "regex": "Deserialize"}},
-                        ],
-                    },
-                },
-                "not": {
-                    "follows": {
-                        "stopBy": "end",
-                        "kind": "attribute_item",
-                        "has": {
-                            "kind": "attribute",
-                            "all": [
-                                {"has": {"kind": "identifier", "regex": "^serde$"}},
-                                {
-                                    "any": [
-                                        {
-                                            "has": {
-                                                "kind": "token_tree",
-                                                "regex": "untagged",
-                                            }
-                                        },
-                                        {
-                                            "has": {
-                                                "kind": "token_tree",
-                                                "regex": "tag\\s*=",
-                                            }
-                                        },
-                                    ]
-                                },
-                            ],
+                "all": [
+                    {"kind": "enum_item"},
+                    {
+                        "follows": {
+                            "stopBy": _ATTR_STOP_BY,
+                            "kind": "attribute_item",
+                            "has": {
+                                "kind": "attribute",
+                                "all": [
+                                    {
+                                        "has": {
+                                            "kind": "identifier",
+                                            "regex": "^derive$",
+                                        }
+                                    },
+                                    {
+                                        "has": {
+                                            "kind": "token_tree",
+                                            "regex": "Deserialize",
+                                        }
+                                    },
+                                ],
+                            },
                         },
-                    }
-                },
+                    },
+                    {
+                        "not": {
+                            "follows": {
+                                "stopBy": _ATTR_STOP_BY,
+                                "kind": "attribute_item",
+                                "has": {
+                                    "kind": "attribute",
+                                    "all": [
+                                        {
+                                            "has": {
+                                                "kind": "identifier",
+                                                "regex": "^serde$",
+                                            }
+                                        },
+                                        {
+                                            "any": [
+                                                {
+                                                    "has": {
+                                                        "kind": "token_tree",
+                                                        "regex": "untagged",
+                                                    }
+                                                },
+                                                {
+                                                    "has": {
+                                                        "kind": "token_tree",
+                                                        "regex": "tag\\s*=",
+                                                    }
+                                                },
+                                            ]
+                                        },
+                                    ],
+                                },
+                            }
+                        }
+                    },
+                    # Unit-only enums intentionally use plain string encoding.
+                    {
+                        "any": [
+                            {
+                                "has": {
+                                    "stopBy": "end",
+                                    "kind": "field_declaration_list",
+                                }
+                            },
+                            {
+                                "has": {
+                                    "stopBy": "end",
+                                    "kind": "ordered_field_declaration_list",
+                                }
+                            },
+                        ]
+                    },
+                ]
             },
         )
         matches = list(node.find_all(config))
