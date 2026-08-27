@@ -105,7 +105,12 @@ def _print_results(
                 header += f" ({ignored} ignored)"
             sys.stdout.write(f"{header}\n")
             for v in vlist:
-                sys.stdout.write(f"  --> {v.file_path}:{v.line}:{v.column}\n")
+                if v.message and v.message != "found":
+                    sys.stdout.write(
+                        f"  --> {v.file_path}:{v.line}:{v.column} {v.message}\n"
+                    )
+                else:
+                    sys.stdout.write(f"  --> {v.file_path}:{v.line}:{v.column}\n")
             sys.stdout.write(f"help: {lint.help}\n")
             sys.stdout.write("\n")
         elif ignored:
@@ -113,7 +118,12 @@ def _print_results(
                 f"note[{lint_name}]: {ignored} {lint.description} ignored\n",
             )
             for v in slist:
-                sys.stdout.write(f"  --> {v.file_path}:{v.line}:{v.column}\n")
+                if v.message and v.message != "found":
+                    sys.stdout.write(
+                        f"  --> {v.file_path}:{v.line}:{v.column} {v.message}\n"
+                    )
+                else:
+                    sys.stdout.write(f"  --> {v.file_path}:{v.line}:{v.column}\n")
             sys.stdout.write("\n")
 
 

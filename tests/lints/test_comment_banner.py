@@ -31,7 +31,7 @@ def test_run_comment_banner(tmp_path: Path) -> None:
     assert result.exit_code == 1
     assert "error[comment_banner]: 1 comment banner" in result.output
     assert f"--> {rust_file}:3:1" in result.output
-    assert "help: remove banner-style divider comments" in result.output
+    assert "help: remove unnecessary banner/section separator comments" in result.output
 
 
 def test_run_comment_banner_three_line(tmp_path: Path) -> None:
@@ -51,7 +51,7 @@ def test_run_comment_banner_three_line(tmp_path: Path) -> None:
     assert result.exit_code == 1
     assert "error[comment_banner]: 1 comment banner" in result.output
     assert f"--> {rust_file}:3:1" in result.output
-    assert "help: remove banner-style divider comments" in result.output
+    assert "help: remove unnecessary banner/section separator comments" in result.output
 
 
 def test_run_comment_banner_classification(tmp_path: Path) -> None:
@@ -71,7 +71,7 @@ def test_run_comment_banner_classification(tmp_path: Path) -> None:
     assert result.exit_code == 1
     assert "error[comment_banner]: 1 comment banner" in result.output
     assert f"--> {rust_file}:3:1" in result.output
-    assert "help: remove banner-style divider comments" in result.output
+    assert "help: remove unnecessary banner/section separator comments" in result.output
 
 
 def test_run_comment_banner_clean(tmp_path: Path) -> None:

@@ -74,7 +74,7 @@ from checkrs.lints.std_sync_arc_prefix import StdSyncArcPrefix
 from checkrs.lints.super_imports import SuperImports
 from checkrs.lints.super_paths import SuperPaths
 from checkrs.lints.test_prefix_in_names import TestPrefixInNames
-from checkrs.lints.tracing_info_prefix import TracingInfoPrefix
+from checkrs.lints.tracing_prefix import TracingPrefix
 from checkrs.lints.turbofish_collect import TurbofishCollect
 from checkrs.lints.underscore_in_types import UnderscoreInTypes
 from checkrs.lints.unnecessary_doc_sections import UnnecessaryDocSections
@@ -167,5 +167,5 @@ def get_all_lints() -> list[Lint]:
         ScraperElementRefPrefix(),
         SerdeEnumTag(),
         SerdeCloneIntoFromValue(),
-        TracingInfoPrefix(),
+        TracingPrefix(),
     ]
