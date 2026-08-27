@@ -107,7 +107,7 @@ def test_run_suppression_same_line(tmp_path: Path) -> None:
     )
     result = runner.invoke(app, ["run", str(rs)])
     assert result.exit_code == 0
-    assert "note[unsafe_usage]: 1 unsafe usage ignored" in result.output
+    assert "note[unsafe_usage]: 1 ignored" in result.output
 
 
 def test_run_suppression_previous_line(tmp_path: Path) -> None:
@@ -119,16 +119,15 @@ def test_run_suppression_previous_line(tmp_path: Path) -> None:
     )
     result = runner.invoke(app, ["run", str(rs)])
     assert result.exit_code == 0
-    assert "note[unsafe_usage]: 1 unsafe usage ignored" in result.output
+    assert "note[unsafe_usage]: 1 ignored" in result.output
 
 
 def test_run_suppression_ignore_all(tmp_path: Path) -> None:
     """Test ignore suppression comment."""
     rs = tmp_path / "main.rs"
     rs.write_text(
-        "unsafe { std::ptr::write_bytes(map_ptr, 0, 1024) };"
-        " // checkrs: ignore\n"
+        "unsafe { std::ptr::write_bytes(map_ptr, 0, 1024) }; // checkrs: ignore\n"
     )
     result = runner.invoke(app, ["run", str(rs)])
     assert result.exit_code == 0
-    assert "note[unsafe_usage]: 1 unsafe usage ignored" in result.output
+    assert "note[unsafe_usage]: 1 ignored" in result.output

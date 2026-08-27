@@ -87,10 +87,21 @@ def _check_file(
     return active, suppressed
 
 
+def _format_line(v: Violation, *, ignored: bool = False) -> str:
+    """Format a violation location with optional message."""
+    loc = f"{v.file_path}:{v.line}:{v.column}"
+    suffix = " (ignored)" if ignored else ""
+    if v.message and v.message != "found":
+        return f"  --> {loc} {v.message}{suffix}\n"
+    return f"  --> {loc}{suffix}\n"
+
+
 def _print_results(
     violations: dict[str, list[Violation]],
     suppressed: dict[str, list[Violation]],
     lint_map: dict[str, Lint],
+    *,
+    show_ignored: bool = False,
 ) -> None:
     all_lint_names = set(violations.keys()) | set(suppressed.keys())
     for lint_name in sorted(all_lint_names):
@@ -105,29 +116,21 @@ def _print_results(
                 header += f" ({ignored} ignored)"
             sys.stdout.write(f"{header}\n")
             for v in vlist:
-                if v.message and v.message != "found":
-                    sys.stdout.write(
-                        f"  --> {v.file_path}:{v.line}:{v.column} {v.message}\n"
-                    )
-                else:
-                    sys.stdout.write(f"  --> {v.file_path}:{v.line}:{v.column}\n")
+                sys.stdout.write(_format_line(v))
+            if show_ignored:
+                for v in slist:
+                    sys.stdout.write(_format_line(v, ignored=True))
             sys.stdout.write(f"help: {lint.help}\n")
             sys.stdout.write("\n")
         elif ignored:
-            sys.stdout.write(
-                f"note[{lint_name}]: {ignored} {lint.description} ignored\n",
-            )
-            for v in slist:
-                if v.message and v.message != "found":
-                    sys.stdout.write(
-                        f"  --> {v.file_path}:{v.line}:{v.column} {v.message}\n"
-                    )
-                else:
-                    sys.stdout.write(f"  --> {v.file_path}:{v.line}:{v.column}\n")
+            sys.stdout.write(f"note[{lint_name}]: {ignored} ignored\n")
+            if show_ignored:
+                for v in slist:
+                    sys.stdout.write(_format_line(v))
             sys.stdout.write("\n")
 
 
-def run(paths: list[Path]) -> int:
+def run(paths: list[Path], *, show_ignored: bool = False) -> int:
     """Run all lints against the given paths and return an exit code."""
     files: list[Path] = []
     errors: list[str] = []
@@ -172,5 +175,5 @@ def run(paths: list[Path]) -> int:
     for v in all_suppressed:
         suppressed_grouped[v.lint_name].append(v)
 
-    _print_results(grouped, suppressed_grouped, lint_map)
+    _print_results(grouped, suppressed_grouped, lint_map, show_ignored=show_ignored)
     return 1 if all_violations else 0

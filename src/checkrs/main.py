@@ -36,6 +36,12 @@ _PATH_ARG = typer.Argument(
     help="Path to a Rust file or directory.",
 )
 
+_SHOW_IGNORED_OPTION = typer.Option(
+    _OPTION_DEFAULT,
+    "--show-ignored",
+    help="Show ignored violations.",
+)
+
 
 @app.callback()
 def main(
@@ -48,10 +54,12 @@ def main(
 @app.command()
 def run(
     paths: list[pathlib.Path] = _PATH_ARG,
+    *,
+    show_ignored: bool = _SHOW_IGNORED_OPTION,
 ) -> None:
     """Run the linter."""
     parsed = [pathlib.Path(p) for p in paths]
-    exit_code = run_command(parsed)
+    exit_code = run_command(parsed, show_ignored=show_ignored)
     raise typer.Exit(exit_code)
 
 
